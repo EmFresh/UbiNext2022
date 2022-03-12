@@ -22,6 +22,7 @@ namespace util
 
 		virtual ~Transformer();
 
+		
 		void reset();
 		void enableFPSMode(bool enable = true);
 
@@ -125,6 +126,8 @@ namespace util
 		ActivatorData m_activators;
 
 	protected:
+		CompID createID() { return 0; }
+
 		MatrixData m_matricies;
 		Transformer* m_parent;
 		std::vector<Transformer*> m_children;

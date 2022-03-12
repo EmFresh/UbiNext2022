@@ -28,15 +28,27 @@
     <ClCompile Include="App\TextureLoader.cpp">
       <Filter>Ubisoft Stuff</Filter>
     </ClCompile>
-    <ClCompile Include="Transformer.cpp">
-      <Filter>My Stuff</Filter>
-    </ClCompile>
     <ClCompile Include="Mat4.cpp">
       <Filter>My Stuff</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="Component.cpp" />
-    <ClCompile Include="ObjectPool.cpp" />
+    <ClCompile Include="GameObject.cpp">
+      <Filter>My Stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectPool.cpp">
+      <Filter>My Stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>My Stuff\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Transformer.cpp">
+      <Filter>My Stuff\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Gravity.cpp">
+      <Filter>My Stuff\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics.cpp">
+      <Filter>My Stuff\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities.h">
@@ -72,15 +84,27 @@
     <ClInclude Include="App\TextureLoader.h">
       <Filter>Ubisoft Stuff</Filter>
     </ClInclude>
-    <ClInclude Include="Transformer.h">
-      <Filter>My Stuff</Filter>
-    </ClInclude>
     <ClInclude Include="Mat4.h">
       <Filter>My Stuff</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="Component.h" />
-    <ClInclude Include="ObjectPool.h" />
+    <ClInclude Include="GameObject.h">
+      <Filter>My Stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectPool.h">
+      <Filter>My Stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>My Stuff\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Transformer.h">
+      <Filter>My Stuff\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics.h">
+      <Filter>My Stuff\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Gravity.h">
+      <Filter>My Stuff\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="My Stuff">
@@ -88,6 +112,9 @@
     </Filter>
     <Filter Include="Ubisoft Stuff">
       <UniqueIdentifier>{eea05ec7-9319-4e85-b7ee-6208f6866b02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="My Stuff\Component">
+      <UniqueIdentifier>{48df9f2d-64f5-4c1f-8ee5-7b764b941da6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -6,26 +6,37 @@
 namespace util
 {
 
-class GameObject
-{
-public:
-	GameObject()
+	class GameObject
 	{
-		m_components.push_back(new Transformer);
-	}
-	virtual void awake() { for(auto& comp : m_components)comp->awake(); }
-	virtual void start() { for(auto& comp : m_components)comp->start(); }
-	virtual void update() { for(auto& comp : m_components)comp->update(); }
+	public:
+		GameObject()
+		{
+			m_components.push_back(new Transformer);
 
-	void setActive(bool active) { m_active = active; }
-	template<class T>
-	T getComponent() { for(auto& comp : m_components) if(dynamic_cast<T*>(comp))return *dynamic_cast<T*>(comp); }
+		}
+		~GameObject()
+		{
+			for(auto a : m_components)
+				delete a;
+		}
 
-	Transformer getComponent() { return static_cast<Transformer&>(*m_components[0]); }
+		virtual void awake() { for(auto& comp : m_components)comp->awake(); }
+		virtual void start() { for(auto& comp : m_components)comp->start(); }
+		virtual void update(float dt) { for(auto& comp : m_components)comp->update(dt); }
+		virtual void lateUpdate(float dt) { for(auto& comp : m_components)comp->lateUpdate(dt); }
 
-private:
-	bool m_active = true;
-	std::vector<Component*> m_components;
-};
+		void setActive(bool active) { m_active = active; }
+		bool isActive() { return m_active; }
+
+		template<class T>
+		T* getComponent() { for(auto& comp : m_components) if(dynamic_cast<T*>(comp))return dynamic_cast<T*>(comp); return nullptr; }
+		Transformer* getComponent() { return (Transformer*)m_components[0]; }
+		template<class T>
+		void addComponent(Component* comp = nullptr) { comp ? m_components.push_back(comp) : m_components.push_back(new T()); ((Component*)m_components.back())->setGameObject(this); }
+
+	private:
+		bool m_active = true;
+		std::vector<Component*> m_components;
+	};
 
 }
