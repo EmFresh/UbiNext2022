@@ -14,6 +14,8 @@ void Gravity::awake()
 
 void Gravity::update(float dt)
 {
+	if(!getGameObject().isActive())return;
+
 	//apply world gravity
 	Physics* myPhysics = getGameObject().getComponent<Physics>();
 	if(myPhysics)
