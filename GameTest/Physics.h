@@ -13,7 +13,8 @@ public:
 	void addForce(util::Vec3);
 
 private:
+	float m_dragPercent = 0;
+	util::Vec3 m_force,m_velocity;
 
-	util::Vec3 m_force;
 };
 
