@@ -14,6 +14,7 @@ namespace util
 			addComponent<Transformer>();
 
 		}
+
 		~GameObject()
 		{
 			for(auto a : m_components)

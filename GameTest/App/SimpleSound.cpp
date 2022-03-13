@@ -288,7 +288,7 @@ bool CSimpleSound::LoadWaveFile(const char* filename)
 	tempBuffer->Release();
 	tempBuffer = 0;
 
-	// Move to the beginning of the wave data which starts at the end of the data chunk header.
+	// Move to the beginning of the wave data which starts at the m_end of the data chunk header.
 	fseek(filePtr, sizeof(WaveHeaderType), SEEK_SET);
 
 	// Create a temporary buffer to hold the wave file data.

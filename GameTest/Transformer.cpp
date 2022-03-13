@@ -46,7 +46,7 @@ namespace util
 		m_matricies.m_localRotate = Mat4(1);
 
 		if(angles.z)
-			m_matricies.m_localRotate *= Quat::quatRotationMat(-angles.z, Vec3{0, 0, 1});
+			m_matricies.m_localRotate *= Quat::quatRotationMat(angles.z, Vec3{0, 0, 1});
 
 		if(angles.y)
 			m_matricies.m_localRotate *= Quat::quatRotationMat(-angles.y, Vec3{0, 1, 0});
