@@ -251,315 +251,8 @@ namespace util
 			return !(*this < coord);
 		}
 	};
-	
-		template<class T = float>
-	struct Coord4D
-	{
-		union
-		{
-			struct { T x, y, z; };
-			struct { T w, h, d; };
-			struct { T r, g, b; };
-			struct { T width, height, depth; };
-		};
 
 
-		Coord4D() :x(0), y(0), z(0), w(0) {};
-
-		Coord4D(Coord2D<T> coord)
-		{
-			x = coord.x;
-			y = coord.y;
-			z = 0;
-			w = 0;
-		}
-
-		template<class P = float>
-		Coord4D(const Coord2D<P> coord)
-		{
-			x = (T)coord.x;
-			y = (T)coord.y;
-			z = (T)0;
-		}
-		void operator=(Coord2D<T> coord)
-		{
-			x = coord.x;
-			y = coord.y;
-		}
-
-		Coord4D(Coord2D<T> coord, T last)
-		{
-			x = coord.x;
-			y = coord.y;
-			z = last;
-		}
-		Coord4D(T scale)
-		{
-			this->x = scale;
-			this->y = scale;
-			this->z = scale;
-		}
-		Coord4D(T a_x, T a_y, T a_z, T a_w)
-		{
-
-
-			this->x = a_x;
-			this->y = a_y;
-			this->z = a_z;
-			this->w = a_w;
-
-		}
-		Coord4D(T a_x, T a_y, T a_z)
-		{
-			this->x = a_x;
-			this->y = a_y;
-			this->z = a_z;
-		}
-		Coord4D(T a_x, T a_y)
-		{
-			this->x = a_x;
-			this->y = a_y;
-		}
-
-		static T distance(Coord4D<T> v1, Coord4D<T> v2)
-		{
-			v1 -= v2;
-			return v1.length();
-		}
-
-		T length()
-		{
-			return (T)sqrtf(distanceSquare());
-		}
-
-		T distanceSquare()
-		{
-			return (x * x + y * y + z * z + w * w);
-		}
-
-		static T dotProduct(Coord4D<T> a, Coord4D<T> b)
-		{
-			return a.x * b.x + a.y * b.y + a.z * b.z;
-		}
-
-		static Coord4D<T> crossProduct(Coord4D<T> a, Coord4D<T> b)
-		{
-			return
-			{
-				a.y * b.z - a.z * b.y,
-				a.z * b.x - a.x * b.z,
-				a.x * b.y - a.y * b.x
-			};
-		}
-		Coord4D<T> crossProduct(Coord4D<T> b)
-		{
-			return crossProduct(*this, b);
-		}
-
-
-		friend static Coord4D<T> abs(Coord4D<T> val)
-		{
-			return {sqrtf(val.x * val.x), sqrtf(val.y * val.y), sqrtf(val.z * val.z), sqrtf(val.w * val.w)};
-		}
-
-
-		Coord4D<T> normal()
-		{
-			return *this / length();
-		}
-
-
-		void set(Coord2D<T> coord)
-		{
-			x = coord.x;
-			y = coord.y;
-		}
-
-		void set(T a_x, T a_y, T a_z, T a_w)
-		{
-			this->x = a_x;
-			this->y = a_y;
-			this->z = a_z;
-			this->w = a_w;
-		}
-		void set(T a_x, T a_y, T a_z)
-		{
-			this->x = a_x;
-			this->y = a_y;
-			this->z = a_z;
-		}
-
-		void set(T a_x, T a_y)
-		{
-			this->x = a_x;
-			this->y = a_y;
-		}
-
-		void normalize()
-		{
-			T norm = sqrtf(x * x + y * y + z * z);
-			x /= norm;
-			y /= norm;
-			z /= norm;
-		}
-
-		T& operator[] (int index)
-		{
-			assert(index < 4 && index >= 0);//cant be accessing unknown memory
-
-			return *(((T*)this) + index);
-		}
-
-		Coord4D<T> operator+(Coord4D<T> coord)const
-		{
-			return {T(x + coord.x), T(y + coord.y), T(z + coord.z), T(w + coord.w)};
-		}
-
-		Coord4D<T> operator-(Coord4D<T> coord)const
-		{
-			return {T(x - coord.x), T(y - coord.y), T(z - coord.z), T(w - coord.w)};
-		}
-
-		friend Coord4D<T> operator-(T val, const Coord4D<T> coord)
-		{
-			return {T(val - coord.x), T(val - coord.y), T(val - coord.z), T(val - coord.w)};
-		}
-
-		friend Coord4D<T> operator*(T scaler, const Coord4D<T> coord)
-		{
-			return {scaler * coord.x, scaler * coord.y, scaler * coord.z, scaler * coord.w};
-		}
-
-		Coord4D<T> operator*(Coord4D<T> coord)const
-		{
-			return {x * coord.x, y * coord.y, z * coord.z, w * coord.w};
-		}
-
-		Coord4D<T> operator*(T coord)const
-		{
-			return {x * coord, y * coord, z * coord, w * coord};
-		}
-
-		Coord4D<T> operator/(Coord4D<T> coord)const
-		{
-			return {x / coord.x, y / coord.y, z / coord.z, w / coord.w};
-		}
-
-		Coord4D<T> operator/(T coord)const
-		{
-			return {x / coord, y / coord, z / coord, w / coord};
-		}
-		Coord4D<T> operator%(Coord4D<T> coord)const
-		{
-			return	{
-				(T)coord.x ? std::fmodf(x, coord.x) : 0,
-				(T)coord.y ? std::fmodf(y, coord.y) : 0,
-				(T)coord.z ? std::fmodf(z, coord.z) : 0,
-				(T)coord.w ? std::fmodf(w, coord.w) : 0
-			};
-		}
-
-		Coord4D<T> operator%(T coord)const
-		{
-			return {
-				(T)coord ? std::fmodf(x, coord) : 0,
-				(T)coord ? std::fmodf(y, coord) : 0,
-				(T)coord ? std::fmodf(z, coord) : 0
-				(T)coord ? std::fmodf(w, coord) : 0
-			};
-		}
-
-		Coord4D<T> operator-()const
-		{
-
-			return *this * -1;
-		}
-
-		void operator-=(Coord4D<T> coord)
-		{
-			x -= coord.x;
-			y -= coord.y;
-			z -= coord.z;
-			w -= coord.w;
-		}
-
-		void operator+=(Coord4D<T> coord)
-		{
-			x += coord.x;
-			y += coord.y;
-			z += coord.z;
-			w += coord.w;
-		}
-
-		void operator*=(Coord4D<T> coord)
-		{
-			x *= coord.x;
-			y *= coord.y;
-			z *= coord.z;
-			w *= coord.w;
-		}
-
-		void operator*=(T val)
-		{
-			x *= val;
-			y *= val;
-			z *= val;
-			w *= val;
-		}
-
-		void operator/=(T val)
-		{
-			x /= val;
-			y /= val;
-			z /= val;
-			w /= val;
-		}
-
-
-		bool operator==(Coord4D<T> coord)const
-		{
-			return
-				x == coord.x &&
-				y == coord.y &&
-				z == coord.z &&
-				w == coord.w;
-		}
-
-		bool operator!=(Coord4D<T> coord)const
-		{
-			return !(*this == coord);
-		}
-
-		//based on distance
-		bool operator>(Coord4D<T> coord)
-		{
-			return this->distanceSquare() > coord.distanceSquare();
-		}
-		//based on distance
-		bool operator<=(Coord4D<T> coord)const
-		{
-			return !(*this > coord);
-		}
-		//based on distance
-		bool operator<(Coord4D<T> coord)
-		{
-			return distanceSquare() < coord.distanceSquare();
-		}
-		//based on distance
-		bool operator>=(Coord4D<T> coord)const
-		{
-			return !(*this < coord);
-		}
-
-		cstring toString()
-		{
-			static char toStr[80]{};
-			sprintf_s(toStr, "(%f, %f, %f, %f)", x, y, z, w);
-			return toStr;
-		}
-	private:
-
-	};
 
 	template<class T = float>
 	struct Coord3D
@@ -588,7 +281,7 @@ namespace util
 			y = (T)coord.y;
 			z = (T)0;
 		}
-		
+
 		void operator=(Coord2D<T> coord)
 		{
 			x = coord.x;
@@ -600,13 +293,6 @@ namespace util
 			x = coord.x;
 			y = coord.y;
 			z = last;
-		}
-
-		Coord3D(Coord4D<T>coord)
-		{
-			x = coord.x;
-			y = coord.y;
-			z = coord.z;
 		}
 
 		Coord3D(T scale)
@@ -859,6 +545,317 @@ namespace util
 	private:
 
 	};
+
+	template<class T = float>
+	struct Coord4D
+	{
+		union
+		{
+			struct { T x, y, z, w; };
+			struct { T r, g, b, a; };
+			struct { T width, height, depth, scale; };
+		};
+
+
+		Coord4D() :x(0), y(0), z(0), w(0) {};
+
+		Coord4D(Coord2D<T> coord)
+		{
+			x = coord.x;
+			y = coord.y;
+			z = 0;
+			w = 0;
+		}
+
+		template<class P = float>
+		Coord4D(const Coord3D<P> coord)
+		{
+			x = (T)coord.x;
+			y = (T)coord.y;
+			z = (T)coord.z;
+			w = (T)0;
+		}
+
+		Coord4D(Coord3D<T> coord, T last)
+		{
+			x = coord.x;
+			y = coord.y;
+			z = coord.z;
+			w = last;
+		}
+
+		Coord4D(T scale)
+		{
+			this->x = scale;
+			this->y = scale;
+			this->z = scale;
+			this->w = scale;
+		}
+		Coord4D(T a_x, T a_y, T a_z, T a_w)
+		{
+
+
+			this->x = a_x;
+			this->y = a_y;
+			this->z = a_z;
+			this->w = a_w;
+
+		}
+		Coord4D(T a_x, T a_y, T a_z)
+		{
+			this->x = a_x;
+			this->y = a_y;
+			this->z = a_z;
+			w = 0;
+		}
+		Coord4D(T a_x, T a_y)
+		{
+			this->x = a_x;
+			this->y = a_y;
+			this->z = 0;
+			w = 0;
+		}
+
+		static T distance(Coord4D<T> v1, Coord4D<T> v2)
+		{
+			v1 -= v2;
+			return v1.length();
+		}
+
+		T length()
+		{
+			return (T)sqrtf(distanceSquare());
+		}
+
+		T distanceSquare()
+		{
+			return (x * x + y * y + z * z + w * w);
+		}
+
+		static T dotProduct(Coord4D<T> a, Coord4D<T> b)
+		{
+			return a.x * b.x + a.y * b.y + a.z * b.z;
+		}
+
+		static Coord4D<T> crossProduct(Coord4D<T> a, Coord4D<T> b)
+		{
+			return
+			{
+				a.y * b.z - a.z * b.y,
+				a.z * b.x - a.x * b.z,
+				a.x * b.y - a.y * b.x
+			};
+		}
+		Coord4D<T> crossProduct(Coord4D<T> b)
+		{
+			return crossProduct(*this, b);
+		}
+
+
+		friend static Coord4D<T> abs(Coord4D<T> val)
+		{
+			return {sqrtf(val.x * val.x), sqrtf(val.y * val.y), sqrtf(val.z * val.z), sqrtf(val.w * val.w)};
+		}
+
+
+		Coord4D<T> normal()
+		{
+			return *this / length();
+		}
+
+
+		void set(Coord2D<T> coord)
+		{
+			x = coord.x;
+			y = coord.y;
+		}
+
+		void set(T a_x, T a_y, T a_z, T a_w)
+		{
+			this->x = a_x;
+			this->y = a_y;
+			this->z = a_z;
+			this->w = a_w;
+		}
+		void set(T a_x, T a_y, T a_z)
+		{
+			this->x = a_x;
+			this->y = a_y;
+			this->z = a_z;
+		}
+
+		void set(T a_x, T a_y)
+		{
+			this->x = a_x;
+			this->y = a_y;
+		}
+
+		void normalize()
+		{
+			T norm = sqrtf(x * x + y * y + z * z);
+			x /= norm;
+			y /= norm;
+			z /= norm;
+		}
+
+		T& operator[] (int index)
+		{
+			assert(index < 4 && index >= 0);//cant be accessing unknown memory
+
+			return *(((T*)this) + index);
+		}
+
+		Coord4D<T> operator+(Coord4D<T> coord)const
+		{
+			return {T(x + coord.x), T(y + coord.y), T(z + coord.z), T(w + coord.w)};
+		}
+
+		Coord4D<T> operator-(Coord4D<T> coord)const
+		{
+			return {T(x - coord.x), T(y - coord.y), T(z - coord.z), T(w - coord.w)};
+		}
+
+		friend Coord4D<T> operator-(T val, const Coord4D<T> coord)
+		{
+			return {T(val - coord.x), T(val - coord.y), T(val - coord.z), T(val - coord.w)};
+		}
+
+		friend Coord4D<T> operator*(T scaler, const Coord4D<T> coord)
+		{
+			return {scaler * coord.x, scaler * coord.y, scaler * coord.z, scaler * coord.w};
+		}
+
+		Coord4D<T> operator*(Coord4D<T> coord)const
+		{
+			return {x * coord.x, y * coord.y, z * coord.z, w * coord.w};
+		}
+
+		Coord4D<T> operator*(T coord)const
+		{
+			return {x * coord, y * coord, z * coord, w * coord};
+		}
+
+		Coord4D<T> operator/(Coord4D<T> coord)const
+		{
+			return {x / coord.x, y / coord.y, z / coord.z, w / coord.w};
+		}
+
+		Coord4D<T> operator/(T coord)const
+		{
+			return {x / coord, y / coord, z / coord, w / coord};
+		}
+		Coord4D<T> operator%(Coord4D<T> coord)const
+		{
+			return	{
+				(T)coord.x ? std::fmodf(x, coord.x) : 0,
+				(T)coord.y ? std::fmodf(y, coord.y) : 0,
+				(T)coord.z ? std::fmodf(z, coord.z) : 0,
+				(T)coord.w ? std::fmodf(w, coord.w) : 0
+			};
+		}
+
+		Coord4D<T> operator%(T coord)const
+		{
+			return {
+				(T)coord ? std::fmodf(x, coord) : 0,
+				(T)coord ? std::fmodf(y, coord) : 0,
+				(T)coord ? std::fmodf(z, coord) : 0
+				(T)coord ? std::fmodf(w, coord) : 0
+			};
+		}
+
+		Coord4D<T> operator-()const
+		{
+
+			return *this * -1;
+		}
+
+		void operator-=(Coord4D<T> coord)
+		{
+			x -= coord.x;
+			y -= coord.y;
+			z -= coord.z;
+			w -= coord.w;
+		}
+
+		void operator+=(Coord4D<T> coord)
+		{
+			x += coord.x;
+			y += coord.y;
+			z += coord.z;
+			w += coord.w;
+		}
+
+		void operator*=(Coord4D<T> coord)
+		{
+			x *= coord.x;
+			y *= coord.y;
+			z *= coord.z;
+			w *= coord.w;
+		}
+
+		void operator*=(T val)
+		{
+			x *= val;
+			y *= val;
+			z *= val;
+			w *= val;
+		}
+
+		void operator/=(T val)
+		{
+			x /= val;
+			y /= val;
+			z /= val;
+			w /= val;
+		}
+
+
+		bool operator==(Coord4D<T> coord)const
+		{
+			return
+				x == coord.x &&
+				y == coord.y &&
+				z == coord.z &&
+				w == coord.w;
+		}
+
+		bool operator!=(Coord4D<T> coord)const
+		{
+			return !(*this == coord);
+		}
+
+		//based on distance
+		bool operator>(Coord4D<T> coord)
+		{
+			return this->distanceSquare() > coord.distanceSquare();
+		}
+		//based on distance
+		bool operator<=(Coord4D<T> coord)const
+		{
+			return !(*this > coord);
+		}
+		//based on distance
+		bool operator<(Coord4D<T> coord)
+		{
+			return distanceSquare() < coord.distanceSquare();
+		}
+		//based on distance
+		bool operator>=(Coord4D<T> coord)const
+		{
+			return !(*this < coord);
+		}
+
+		cstring toString()
+		{
+			static char toStr[80]{};
+			sprintf_s(toStr, "(%f, %f, %f, %f)", x, y, z, w);
+			return toStr;
+		}
+	private:
+
+	};
+
 
 	typedef Coord4D<> Vec4;
 	typedef Coord3D<> Vec3;

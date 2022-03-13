@@ -47,7 +47,7 @@ namespace util
 
 		CompID getID()const { return m_id; }
 
-		GameObject& getGameObject() { return *m_gameObject; }
+		GameObject* getGameObject() { return m_gameObject; }
 		void setGameObject(GameObject* go) { m_gameObject = go; }
 		template<class T>
 		static std::vector<Component*> getComponents()

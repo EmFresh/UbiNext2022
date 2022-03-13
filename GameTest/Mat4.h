@@ -22,6 +22,7 @@ namespace util
 		//Operators
 		Mat4 operator*(Mat4)const;
 		Vec4 operator*(Vec4)const;
+		Vec4 operator*(Vec4);
 		Mat4 operator*(float scaler)const;
 
 		void operator*=(Mat4);

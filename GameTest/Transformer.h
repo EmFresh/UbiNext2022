@@ -22,7 +22,7 @@ namespace util
 
 		virtual ~Transformer();
 
-		
+
 		void reset();
 		void enableFPSMode(bool enable = true);
 
@@ -80,7 +80,7 @@ namespace util
 		struct TransformationData
 		{
 			Vec3 m_forward = {0, 0, 1}, m_up = {0, 1, 0}, m_right = {1, 0, 0};
-			Vec3 m_posDat, m_rotDat, m_scaleDat;
+			Vec3 m_posDat = {0, 0, 0}, m_rotDat{0, 0, 0}, m_scaleDat{1, 1, 1};
 		};
 
 		struct ActivatorData
@@ -115,6 +115,9 @@ namespace util
 		void setMatrixData(MatrixData dat) { m_matricies = dat; }
 
 		Transformer* getParent() { return m_parent; }
+		void setParent(Transformer* parent) { m_parent = parent; parent->addChild(this); }
+
+		void addChild(Transformer* child) { m_children.push_back(child); }
 		std::vector<Transformer*> getChildren() { return m_children; }
 
 	private:
@@ -129,7 +132,7 @@ namespace util
 		CompID createID() { return 0; }
 
 		MatrixData m_matricies;
-		Transformer* m_parent;
+		Transformer* m_parent = nullptr;
 		std::vector<Transformer*> m_children;
 
 	};

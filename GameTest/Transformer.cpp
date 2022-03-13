@@ -55,14 +55,19 @@ namespace util
 			m_matricies.m_localRotate *= Quat::quatRotationMat(angles.x, Vec3{1, 0, 0});
 
 
-		m_transforms.m_forward = m_matricies.m_localRotate * Vec4(0, 0, 1, 1);
-		m_transforms.m_right = m_matricies.m_localRotate * Vec4(1, 0, 0, 1);
-		m_transforms.m_up = m_matricies.m_localRotate * Vec4(0, 1, 0, 1);
+		auto tmp = m_matricies.m_localRotate * Vec4(0, 0, 1, 1);
+		m_transforms.m_forward = Vec3(tmp.x, tmp.y, tmp.z);
+
+		tmp = m_matricies.m_localRotate * Vec4(1, 0, 0, 1);
+		m_transforms.m_right = Vec3(tmp.x, tmp.y, tmp.z);
+
+		tmp = m_matricies.m_localRotate * Vec4(0, 1, 0, 1);
+		m_transforms.m_up = Vec3(tmp.x, tmp.y, tmp.z);
 
 		m_transforms.m_forward.normalize();
 		m_transforms.m_up.normalize();
 		m_transforms.m_right.normalize();
-		m_transforms.m_rotDat = angles;
+		m_transforms.m_rotDat = Vec3(fmodf(angles.x, 360), fmodf(angles.y, 360), fmodf(angles.z, 360));
 
 		m_activators.m_rotateBy = false;
 	}
@@ -98,7 +103,7 @@ namespace util
 		Vec3 tmpPos = m_transforms.m_posDat;
 
 		m_transforms.m_posDat += (forward * -pos.z) + (up * pos.y) + (right * pos.x);
-		m_matricies.m_localTranslate = Mat4::translate(Mat4(1), m_transforms.m_posDat);
+		m_matricies.m_localTranslate = Mat4::translate(Mat4(1), Vec4(m_transforms.m_posDat, 1));
 	}
 
 	void Transformer::translateBy(float x, float y, float z)
@@ -125,7 +130,8 @@ namespace util
 			right = {1, 0, 0};
 
 		m_transforms.m_posDat = pos.x * right + pos.y * up + -pos.z * forward;
-		m_matricies.m_localTranslate = Mat4::translate(Mat4(1), m_transforms.m_posDat);
+		auto tmp = Vec4(m_transforms.m_posDat, 1);
+		m_matricies.m_localTranslate = Mat4::translate(Mat4(1), tmp);
 	}
 
 	void Transformer::scaleBy(float scale)
@@ -167,7 +173,7 @@ namespace util
 			right = {1, 0, 0};
 
 		m_transforms.m_scaleDat = x * right + y * up + z * forward;
-		m_matricies.m_localScale = Mat4::scale(Mat4(1), m_transforms.m_scaleDat);
+		m_matricies.m_localScale = Mat4::scale(Mat4(1), Vec4(m_transforms.m_scaleDat, 1));
 	}
 
 	Vec3 Transformer::getLocalPosition()
@@ -242,7 +248,7 @@ namespace util
 		{
 			Transformer* ptrtmp = this;
 			bool updated = false;
-			while(ptrtmp = dynamic_cast<Transformer*>(ptrtmp->getParent()))
+			while(ptrtmp = (ptrtmp->getParent()))
 				if(ptrtmp->m_activators.m_updatedRot)updated = true;
 
 			if(!updated)return;
@@ -268,7 +274,7 @@ namespace util
 		{
 			Transformer* ptrtmp = this;
 			bool updated = false;
-			while((ptrtmp = dynamic_cast<Transformer*>(ptrtmp->getParent())))
+			while((ptrtmp = ptrtmp->getParent()))
 				if(ptrtmp->m_activators.m_updatedScale)updated = true;
 
 			if(!updated)return;
@@ -294,7 +300,7 @@ namespace util
 		{
 			Transformer* ptrtmp = this;
 			bool updated = false;
-			while(ptrtmp = dynamic_cast<Transformer*>(ptrtmp->getParent()))
+			while(ptrtmp = (ptrtmp->getParent()))
 				if(ptrtmp->m_activators.m_updatedTrans)updated = true;
 
 			if(!updated)return;
