@@ -12,7 +12,7 @@ using util::Transformer;
 
 util::Vec3 m_worldGravity;
 
-Gravity::Gravity():Transformer()
+Gravity::Gravity() :Transformer()
 {}
 
 Gravity::Gravity(const Gravity& reff) : Transformer(reff)
@@ -37,17 +37,28 @@ void Gravity::update(float dt)
 	for(auto gravity : gravities)
 		if(myPhysics && gravity->getGameObject()->isActive())
 		{
-			Transformer* trans1 = getGameObject()->getComponent<Transformer>(), * trans2 = gravity->getGameObject()->getComponent<Transformer>();
-			myPhysics->addForce(((Gravity*)gravity)->m_gravPull /
-				Vec4::distance(trans1->getWorldTranslationMatrix() * trans1->getLocalPosition(),
-					trans2->getWorldTranslationMatrix() * trans2->getLocalPosition()) * dt);
+			if(gravity == this)continue;
+
+			Transformer
+				* trans1 = getGameObject()->getComponent<Transformer>(),
+				* trans2 = gravity;
+
+			auto force =
+				trans1->getWorldTranslationMatrix() * trans1->getLocalPosition() -
+				trans2->getWorldTranslationMatrix() * trans2->getLocalPosition();
+			force[3] = 0;
+
+			float dist = force.lengthSquare();
+			force.normalize();
+			force *= gravity->m_gravPull;
+			myPhysics->addForce(Vec3(force.x, force.y, force.z) / dist * dt);
 		}
 
 }
 
 void Gravity::setPullForce(float force)
 {
-	m_gravPull = force;
+	m_gravPull = -force;
 }
 
 void Gravity::setWorldGravity(util::Vec3 force)

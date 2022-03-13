@@ -58,6 +58,8 @@
     <ClCompile Include="MyGameTest.cpp">
       <Filter>My Stuff</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Bullet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities.h">
@@ -120,6 +122,8 @@
     <ClInclude Include="Wall.h">
       <Filter>My Stuff\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Bullet.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="My Stuff">

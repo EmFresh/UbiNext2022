@@ -12,15 +12,36 @@
 #include "Utilities.h"
 #include "GameObject.h"
 #include "Wall.h"
+#include "Player.h"
+#include "Physics.h"
+#include "Quat.h"
 //------------------------------------------------------------------------
 
+using util::Vec4;
 using util::Vec3;
 using util::Vec2;
 using util::Transformer;
 using util::GameObject;
+
+
 using std::vector;
 
 namespace fs = std::filesystem;
+
+/*********************************
+Game Premise:
+A lone man with a ship... enemies
+all around... can you survive? 
+Everything has gravity, the floor,
+the enemies, and yes even you. 
+Fight against enemies under terminal 
+gravity for your survival. as time
+increases so does your gravity making 
+it easier for enemies to catch you. 
+
+***********************************/
+
+
 
 //------------------------------------------------------------------------
 #define MyGame
@@ -31,6 +52,18 @@ namespace fs = std::filesystem;
 
 
 
+// LINE/LINE
+bool lineLine(Vec2 v1, Vec2 v2, Vec2 v3, Vec2 v4)
+{
+
+	// calculate the distance to intersection point
+	float uA = ((v4.x - v3.x) * (v1.y - v3.y) - (v4.y - v3.y) * (v1.x - v3.x)) / ((v4.y - v3.y) * (v2.x - v1.x) - (v4.x - v3.x) * (v2.y - v1.y));
+	float uB = ((v2.x - v1.x) * (v1.y - v3.y) - (v2.y - v1.y) * (v1.x - v3.x)) / ((v4.y - v3.y) * (v2.x - v1.x) - (v4.x - v3.x) * (v2.y - v1.y));
+
+	// if uA and uB are between 0-1, lines are colliding
+	return uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1;
+	
+}
 
 
 // POINT/CIRCLE
@@ -116,12 +149,58 @@ void readFile(std::string path)
 		delete a;
 	m_drawlist.clear();
 
+
+	//add player 
+	m_addlist.push_back(obj = new GameObject());
+	auto trans = obj->getComponent<Transformer>();
+	auto player = obj->addComponent<Player>();
+	auto grav = obj->addComponent<Gravity>();
+	auto phy = obj->addComponent<Physics>();
+	auto rend = obj->addComponent<Renderer>();
+
+	trans->translate({APP_VIRTUAL_WIDTH/2, APP_VIRTUAL_HEIGHT/2});
+	rend->setCustumRender([](GameObject* obj)
+		{
+			auto trans = obj->getComponent<Transformer>();
+			auto player= obj->getComponent<Player>();
+			Vec4 pos = trans->getWorldTransformation() * (trans->getLocalTransformation() * Vec4(0, 0, 0, 1));
+
+			float rad = 35;
+
+			Vec4 
+				p1 = trans->getWorldRotationMatrix() * trans->getWorldScaleMatrix() * (trans->getLocalRotationMatrix() * trans->getLocalScaleMatrix() * util::Quat::quatRotationMat(0, {0, 0, 1}) * Vec4(0, 1, 0) * rad),
+				p2 = trans->getWorldRotationMatrix() * trans->getWorldScaleMatrix() * (trans->getLocalRotationMatrix() * trans->getLocalScaleMatrix() * util::Quat::quatRotationMat(360.f / 3, {0, 0, 1}) * Vec4(0, 1, 0) * rad),
+				p3 = trans->getWorldRotationMatrix() * trans->getWorldScaleMatrix() * (trans->getLocalRotationMatrix() * trans->getLocalScaleMatrix() * util::Quat::quatRotationMat(360.f / 3 * 2, {0, 0, 1}) * Vec4(0, 1, 0) * rad);
+
+			p1 += pos;
+			p2 += pos;
+			p3 += pos;
+
+			//draw triangle
+			auto tmp1=p1+trans->getUp()*1;
+			auto tmp2=util::lerp(p1,p2,.1f);
+			auto tmp3=util::lerp(p1,p3,.1f);
+
+			App::DrawLine(p1.x, p1.y, p2.x, p2.y);
+			App::DrawLine(p2.x, p2.y, p3.x, p3.y);
+			App::DrawLine(p3.x, p3.y, p1.x, p1.y);
+			App::DrawLine(p1.x, p1.y, tmp2.x, tmp2.y,1,0,0);
+			App::DrawLine(p1.x, p1.y, tmp3.x, tmp3.y,1,0,0);
+			App::Print(APP_VIRTUAL_WIDTH / 2-100, APP_VIRTUAL_HEIGHT - 50,std::to_string((int)player->getFuel()).c_str());
+			
+
+		});
+	grav->setPullForce(5);
+	phy->setDragPercent(0.01f);
+	phy->setVelocityCap(1);
+	player->setDriveForce(.03f);
+
 	while(std::getline(file, line))
 	{
 		if(line.substr(0, line.find(':')) == "wall")
 		{
 			m_addlist.push_back(obj = new GameObject());
-			auto trans = obj->getComponent<Transformer>();
+			trans = obj->getComponent<Transformer>();
 			auto wall = obj->addComponent<Wall>();
 			float x1, y1, x2, y2;
 
@@ -161,9 +240,12 @@ void Init()
 
 	//readFile("level 0.data");
 
+
+
 }
 
-	fs::file_time_type lastTime= fs::file_time_type();
+fs::file_time_type lastTime = fs::file_time_type();
+
 //------------------------------------------------------------------------
 // Update your simulation here. deltaTime is the elapsed time since the last update in ms.
 // This will be called at no greater frequency than the value of APP_MAX_FRAME_RATE
@@ -184,7 +266,7 @@ void Update(float dt)
 	}
 
 	//Extra logic goes here
-	
+
 
 	if(fs::last_write_time(fs::path("level 0.data")) != lastTime)
 	{
@@ -192,12 +274,14 @@ void Update(float dt)
 		lastTime = fs::last_write_time(fs::path("level 0.data"));
 	}
 
+
 	//update loops
 	for(auto a : m_drawlist)
 		a->update(dt);
 
 	for(auto a : m_drawlist)
 		a->lateUpdate(dt);
+
 
 }
 

@@ -67,7 +67,7 @@ void Wall::setPosition(util::Vec2 p1, util::Vec2 p2)
 
 void Wall::setPullForce(float pull)
 {
-	float force = pull / m_gravityList.size();
+	float force = pull * (1.f / m_gravityList.size());
 	for(auto a : m_gravityList)
 		a->setPullForce(force);
 }

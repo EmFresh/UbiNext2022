@@ -20,8 +20,8 @@
 // Note analog inputs are either 0 or 1 when emulated. 
 #define APP_PAD_EMUL_LEFT_THUMB_LEFT	('A')
 #define APP_PAD_EMUL_LEFT_THUMB_RIGHT	('D')
-#define APP_PAD_EMUL_LEFT_THUMB_UP		('W')
-#define APP_PAD_EMUL_LEFT_THUMB_DOWN	('S')
+#define APP_PAD_EMUL_LEFT_THUMB_UP		('S')
+#define APP_PAD_EMUL_LEFT_THUMB_DOWN	('W')
 #define APP_PAD_EMUL_BUTTON_ALT_A		(VK_SPACE)
 #define APP_PAD_EMUL_START				(VK_RETURN)
 

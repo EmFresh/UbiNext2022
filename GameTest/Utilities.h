@@ -13,6 +13,10 @@
 namespace util
 {
 #define reclass(a_class,a_val) (*(a_class*)&(a_val))
+
+#define degtorad(deg) ((deg * M_PI) / 180)
+#define radtodeg(deg) ((deg * 180) / M_PI)
+
 	typedef const char* cstring;
 	typedef unsigned int   uint;
 	typedef unsigned long  ulong;
@@ -133,7 +137,7 @@ namespace util
 			return sqrtf(v3.x * v3.x + v3.y * v3.y);
 		}
 
-		T distanceSquare()
+		T lengthSquare()
 		{
 			return (x * x + y * y);
 		}
@@ -246,7 +250,7 @@ namespace util
 		//based on distance
 		bool operator>(Coord2D<T> coord)
 		{
-			return this->distanceSquare() > coord.distanceSquare();
+			return this->lengthSquare() > coord.lengthSquare();
 		}
 		//based on distance
 		bool operator<=(Coord2D<T> coord)const
@@ -256,7 +260,7 @@ namespace util
 		//based on distance
 		bool operator<(Coord2D<T> coord)
 		{
-			return distanceSquare() < coord.distanceSquare();
+			return lengthSquare() < coord.lengthSquare();
 		}
 		//based on distance
 		bool operator>=(Coord2D<T> coord)const
@@ -341,7 +345,7 @@ namespace util
 			return (T)sqrtf(x * x + y * y + z * z);
 		}
 
-		T distanceSquare()
+		T lengthSquare()
 		{
 			return (x * x + y * y + z * z);
 		}
@@ -434,6 +438,10 @@ namespace util
 		friend Coord3D<T> operator*(T scaler, const Coord3D<T> coord)
 		{
 			return {scaler * coord.x, scaler * coord.y, scaler * coord.z};
+		}
+friend Coord3D<T> operator/(T scaler, const Coord3D<T> coord)
+		{
+			return {scaler / coord.x, scaler / coord.y, scaler / coord.z};
 		}
 
 		Coord3D<T> operator*(Coord3D<T> coord)const
@@ -531,7 +539,7 @@ namespace util
 		//based on distance
 		bool operator>(Coord3D<T> coord)
 		{
-			return this->distanceSquare() > coord.distanceSquare();
+			return this->lengthSquare() > coord.lengthSquare();
 		}
 		//based on distance
 		bool operator<=(Coord3D<T> coord)const
@@ -541,7 +549,7 @@ namespace util
 		//based on distance
 		bool operator<(Coord3D<T> coord)
 		{
-			return distanceSquare() < coord.distanceSquare();
+			return lengthSquare() < coord.lengthSquare();
 		}
 		//based on distance
 		bool operator>=(Coord3D<T> coord)const
@@ -637,10 +645,10 @@ namespace util
 
 		T length()
 		{
-			return (T)sqrtf(distanceSquare());
+			return (T)sqrtf(lengthSquare());
 		}
 
-		T distanceSquare()
+		T lengthSquare()
 		{
 			return (x * x + y * y + z * z + w * w);
 		}
@@ -705,10 +713,11 @@ namespace util
 
 		void normalize()
 		{
-			T norm = sqrtf(x * x + y * y + z * z);
+			T norm = length();
 			x /= norm;
 			y /= norm;
 			z /= norm;
+			w /= norm;
 		}
 
 		T& operator[] (int index)
@@ -737,7 +746,10 @@ namespace util
 		{
 			return {scaler * coord.x, scaler * coord.y, scaler * coord.z, scaler * coord.w};
 		}
-
+		friend Coord4D<T> operator/(T scaler, const Coord4D<T> coord)
+		{
+			return {scaler / coord.x, scaler / coord.y, scaler / coord.z, scaler / coord.w};
+		}
 		Coord4D<T> operator*(Coord4D<T> coord)const
 		{
 			return {x * coord.x, y * coord.y, z * coord.z, w * coord.w};
@@ -841,7 +853,7 @@ namespace util
 		//based on distance
 		bool operator>(Coord4D<T> coord)
 		{
-			return this->distanceSquare() > coord.distanceSquare();
+			return this->lengthSquare() > coord.lengthSquare();
 		}
 		//based on distance
 		bool operator<=(Coord4D<T> coord)const
@@ -851,7 +863,7 @@ namespace util
 		//based on distance
 		bool operator<(Coord4D<T> coord)
 		{
-			return distanceSquare() < coord.distanceSquare();
+			return lengthSquare() < coord.lengthSquare();
 		}
 		//based on distance
 		bool operator>=(Coord4D<T> coord)const

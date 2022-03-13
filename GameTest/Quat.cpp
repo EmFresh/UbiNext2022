@@ -4,7 +4,6 @@
 
 namespace util
 {
-#define degtorad(deg) ((deg * M_PI) / 180)
 
 	Quat::Quat() : w(0), x(0), y(0), z(0)
 	{}

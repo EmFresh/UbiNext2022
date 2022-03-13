@@ -34,6 +34,10 @@ namespace util
 		Transformer* getComponent();
 
 		template<class T>
+		std::vector<T*> getComponents();
+
+
+		template<class T>
 		T* addComponent(Component* comp = nullptr);
 
 	private:
@@ -47,6 +51,17 @@ namespace util
 	T* GameObject::getComponent()
 	{
 		for(auto& comp : m_components) if(dynamic_cast<T*>(comp))return dynamic_cast<T*>(comp); return nullptr;
+	}
+
+	template<class T>
+	inline std::vector<T*> GameObject::getComponents()
+	{
+		std::vector<T*>list;
+		for(auto comp : m_components)
+			if(dynamic_cast<T*>(comp))
+				list.push_back(comp);
+
+		return list;
 	}
 
 	template<class T>

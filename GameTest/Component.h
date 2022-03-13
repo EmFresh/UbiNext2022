@@ -11,13 +11,44 @@ namespace util
 	public:
 		virtual ~Component() = 0 { m_compList.erase(std::find(m_compList.begin(), m_compList.end(), this)); }
 
+		/// <summary>
+		/// First function to be called only once. Used like a constructor.
+		/// </summary>
 		virtual void awake() {}
+		/// <summary>
+		/// First call before the update loops called only once.
+		/// </summary>
 		virtual void start() {}
+		/// <summary>
+		/// Loop of logic done before most physics calculations.
+		/// </summary>
+		/// <param name="dt:"></param>
 		virtual void update(float dt) {}
+		/// <summary>
+		/// Loop of logic done before rendering.
+		/// </summary>
+		/// <param name="dt:"></param>
 		virtual void lateUpdate(float dt) {}
 
 
 		typedef uint CompID;
+
+		CompID getID()const { return m_id; }
+
+		GameObject* getGameObject() { return m_gameObject; }
+		void setGameObject(GameObject* go) { m_gameObject = go; }
+		template<class T>
+		static std::vector<T*> getComponents()
+		{
+			std::vector<T*> result;
+			for(auto a : m_compList)
+				if(dynamic_cast<T*>(a))
+					result.push_back((T*)a);
+
+			return result;
+		}
+		static std::vector<Component*> getAllComponents() { return m_compList; }
+	protected:
 		virtual CompID createID()
 		{
 
@@ -44,23 +75,6 @@ namespace util
 
 
 		}
-
-		CompID getID()const { return m_id; }
-
-		GameObject* getGameObject() { return m_gameObject; }
-		void setGameObject(GameObject* go) { m_gameObject = go; }
-		template<class T>
-		static std::vector<Component*> getComponents()
-		{
-			std::vector<Component*> result;
-			for(auto a : m_compList)
-				if(dynamic_cast<T*>(a))
-					result.push_back(a);
-
-			return result;
-		}
-		static std::vector<Component*> getAllComponents() { return m_compList; }
-	protected:
 		Component() { m_id = createID(); m_compList.push_back(this); }
 
 	private:
