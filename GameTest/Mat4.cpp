@@ -7,6 +7,7 @@ namespace util
 	Mat4::Mat4(float val)
 	{
 		int x = 0, y = 0;
+		memset(this, 0, sizeof(*this));
 		//create identity
 		while(x < 4)
 			data[y++][x++] = val;
@@ -65,11 +66,18 @@ namespace util
 
 	Vec4 Mat4::operator*(Vec4 other)const
 	{
-		Vec4 result = Vec4();
+		Vec4 result(0);
+
+		for(int y = 0; y < 4; ++y)
 		for(int c = 0; c < 4; ++c)
-			result[c] += data[0][c] * other[c];
+			result[y] += data[y][c] * other[c];
 
 		return result;
+	}
+
+	Vec4 Mat4::operator*(Vec4 other)
+	{
+		return (const Mat4)*this * other;
 	}
 
 	Mat4 Mat4::operator*(float scaler)const

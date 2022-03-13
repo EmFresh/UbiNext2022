@@ -11,7 +11,7 @@ namespace util
 	public:
 		GameObject()
 		{
-			m_components.push_back(new Transformer);
+			addComponent<Transformer>();
 
 		}
 		~GameObject()
@@ -20,23 +20,43 @@ namespace util
 				delete a;
 		}
 
-		virtual void awake() { for(auto& comp : m_components)comp->awake(); }
-		virtual void start() { for(auto& comp : m_components)comp->start(); }
-		virtual void update(float dt) { for(auto& comp : m_components)comp->update(dt); }
-		virtual void lateUpdate(float dt) { for(auto& comp : m_components)comp->lateUpdate(dt); }
+		virtual void awake();
+		virtual void start();
+		virtual void update(float dt);
+		virtual void lateUpdate(float dt);
 
-		void setActive(bool active) { m_active = active; }
-		bool isActive() { return m_active; }
+		void setActive(bool active);
+		bool isActive();
 
 		template<class T>
-		T* getComponent() { for(auto& comp : m_components) if(dynamic_cast<T*>(comp))return dynamic_cast<T*>(comp); return nullptr; }
-		Transformer* getComponent() { return (Transformer*)m_components[0]; }
+		T* getComponent();
+		Transformer* getComponent();
+
 		template<class T>
-		void addComponent(Component* comp = nullptr) { comp ? m_components.push_back(comp) : m_components.push_back(new T()); ((Component*)m_components.back())->setGameObject(this); }
+		T* addComponent(Component* comp = nullptr);
 
 	private:
 		bool m_active = true;
 		std::vector<Component*> m_components;
 	};
+
+
+	//templated functions stay in .h file
+	template<class T>
+	T* GameObject::getComponent()
+	{
+		for(auto& comp : m_components) if(dynamic_cast<T*>(comp))return dynamic_cast<T*>(comp); return nullptr;
+	}
+
+	template<class T>
+	T* GameObject::addComponent(Component* comp)
+	{
+		comp ? m_components.push_back(comp) : m_components.push_back(new T());
+		auto mycomponent = m_components.back();
+		mycomponent->setGameObject(this);
+		mycomponent->awake();
+		return (T*)mycomponent;
+	}
+
 
 }

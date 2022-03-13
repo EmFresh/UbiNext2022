@@ -30,9 +30,27 @@ vector<GameObject*> m_addlist, m_drawlist;
 void Init()
 {
 	GameObject* obj;
-	m_addlist.push_back(obj = new GameObject());
-	auto wall = obj->addComponent<Wall>();
-	wall->setLength(300);
+	float lengths[]{300, 300, 300, 300, 300};
+	Vec3 positions[]{{200, 400}, {200, 200}, {200, 200}, {200, 200}, {200, 200}, };
+	Vec3 rotations[]{{0, 0, 90 + 45}, {0, 0, 90 + 45}, {0, 0, 90 + 45}, {0, 0, 90 + 45}, {0, 0, 90 + 45}, };
+
+	for(int a = 0; a < 5; ++a)
+	{
+		m_addlist.push_back(obj = new GameObject());
+		auto trans = obj->getComponent<Transformer>();
+		auto wall = obj->addComponent<Wall>();
+
+		wall->setPullForce(5);
+		wall->setLength(lengths[a]);
+		trans->translate(positions[a]);
+		trans->rotateBy(rotations[a]);
+
+	}
+
+
+
+
+
 }
 
 //------------------------------------------------------------------------
@@ -60,7 +78,6 @@ void Update(float dt)
 
 
 
-
 	//update loops
 	for(auto a : m_drawlist)
 		a->update(dt);
@@ -77,8 +94,11 @@ void Update(float dt)
 void Render()
 {
 	for(auto a : m_drawlist)
-		a->getComponent<Renderer>()->draw();
-
+	{
+		auto render = a->getComponent<Renderer>();
+		if(render)
+			render->draw();
+	}
 }
 
 //------------------------------------------------------------------------

@@ -49,6 +49,15 @@
     <ClCompile Include="Physics.cpp">
       <Filter>My Stuff\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>My Stuff\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Wall.cpp">
+      <Filter>My Stuff\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="MyGameTest.cpp">
+      <Filter>My Stuff</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utilities.h">
@@ -103,6 +112,12 @@
       <Filter>My Stuff\Component</Filter>
     </ClInclude>
     <ClInclude Include="Gravity.h">
+      <Filter>My Stuff\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>My Stuff\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Wall.h">
       <Filter>My Stuff\Component</Filter>
     </ClInclude>
   </ItemGroup>

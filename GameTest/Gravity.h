@@ -1,17 +1,17 @@
 #pragma once
 #include "Utilities.h"
-#include "Component.h"
+#include "Transformer.h"
 
-class Gravity : public util::Component
+class Gravity : public util::Transformer
 {
 public:
+	Gravity();
+	Gravity(Gravity&);
+	Gravity(const Gravity&);
 
 	void awake();
 
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="dt:">change in time</param>
+
 	void update(float);
 	
 	void setPullForce(float);

@@ -9,6 +9,7 @@ public:
 	virtual void draw();
 
 	void setLength(float);
+	void setPullForce(float);
 private:
 	float m_length;
 	std::vector<Gravity* >m_gravityList;
