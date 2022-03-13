@@ -190,25 +190,38 @@ namespace util
 			return {x - (T)coord, y - (T)coord};
 		}
 
-		Coord2D operator/(Coord2D coord)
+		Coord2D<T> operator/(Coord2D<T>  coord)const
 		{
 			return {x / coord.x, y / coord.y};
 		}
-		Coord2D operator/(T coord)
+		Coord2D<T>  operator*( Coord2D<T>  coord)const
+		{
+			return {x * coord.x, y * coord.y};
+		}
+		Coord2D<T>  operator/( T coord)const
 		{
 			return {x / coord, y / coord};
+		}	
+		Coord2D<T>  operator*( T coord)const
+		{
+			return {x * coord, y * coord};
 		}
-		void operator-=(Coord2D coord)
+
+		friend static Coord2D<T>  operator*(T scale, const Coord2D<T>coord )
+		{
+			return {scale * coord.x, scale * coord.y};
+		}
+		void operator-=(Coord2D<T>  coord)
 		{
 			x -= coord.x;
 			y -= coord.y;
 		}
-		void operator+=(Coord2D coord)
+		void operator+=(Coord2D<T>  coord)
 		{
 			x += coord.x;
 			y += coord.y;
 		}
-		void operator/=(Coord2D coord)
+		void operator/=(Coord2D<T>  coord)
 		{
 			x /= coord.x, y /= coord.y;
 		}
