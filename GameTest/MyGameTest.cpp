@@ -14,6 +14,7 @@
 #include "Wall.h"
 #include "Player.h"
 #include "Physics.h"
+#include "Bullet.h"
 #include "Quat.h"
 //------------------------------------------------------------------------
 
@@ -188,12 +189,18 @@ void readFile(std::string path)
 			App::DrawLine(p1.x, p1.y, tmp3.x, tmp3.y,1,0,0);
 			App::Print(APP_VIRTUAL_WIDTH / 2-100, APP_VIRTUAL_HEIGHT - 50,std::to_string((int)player->getFuel()).c_str());
 			
+			//draw bullet
+			for(auto bullet : player->getBulletPool().getObjectList())
+			{
+				auto tmp = bullet->getComponent<Bullet>();
+				tmp->draw();
+			}
 
 		});
 	grav->setPullForce(5);
 	phy->setDragPercent(0.01f);
-	phy->setVelocityCap(1);
-	player->setDriveForce(.03f);
+	phy->setVelocityCap(50);
+	player->setDriveForce(.5f);
 
 	while(std::getline(file, line))
 	{
@@ -252,6 +259,8 @@ fs::file_time_type lastTime = fs::file_time_type();
 //------------------------------------------------------------------------
 void Update(float dt)
 {
+	dt *= .01f;
+
 	//add new GameObjects
 	if(m_addlist.size())
 	{

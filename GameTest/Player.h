@@ -13,6 +13,8 @@ public:
 
 	void setDriveForce(float);
 	float getFuel() { return m_fuel; }
+
+	util::ObjectPool& getBulletPool() { return m_bulletPool; }
 private:
 
 	util::ObjectPool m_bulletPool;
@@ -20,6 +22,7 @@ private:
 	util::GameObject *reffBullet = nullptr;
 	float m_drive = 0;
 	int m_lives = 5;
-	float m_fuel = 2000;
+	float m_fuel = 9000;
+	float gunCount=0;
 };
 

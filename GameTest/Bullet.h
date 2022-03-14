@@ -7,6 +7,8 @@ public:
 
 	void update(float);
 
+
+	void draw();
 	void setDirection(util::Vec3 dir) { m_dir = dir.normal(); }
 	void setSpeed(float speed) { m_speed = speed; }
 private:

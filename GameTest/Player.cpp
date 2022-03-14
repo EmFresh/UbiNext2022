@@ -14,10 +14,10 @@ using util::Vec2;
 
 void Player::awake()
 {
-	reffBullet= new GameObject();
+	reffBullet = new GameObject();
 	reffBullet->addComponent<Bullet>();
 
-	m_bulletPool = util::ObjectPool(10, reffBullet);
+	m_bulletPool = util::ObjectPool(10);
 }
 
 void Player::update(float dt)
@@ -38,18 +38,28 @@ void Player::update(float dt)
 	if(controller.GetLeftTrigger() > .2f)
 	{
 		physics->addForce(trans->getUp() * controller.GetLeftTrigger() * m_drive);
-		m_fuel -= controller.GetLeftTrigger() * m_drive * 15;
+		m_fuel -= controller.GetLeftTrigger() * m_drive * 5;
 	}
 	//fire gun
 	if(controller.GetRightTrigger() > .2f)
 	{
-		auto obj=m_bulletPool.getNewObject();
-		auto bullet = obj->getComponent<Bullet>();
-		auto tmpTrans= obj->getComponent<Transformer>();
-		tmpTrans->translate(trans->getLocalPosition());
-		bullet->setDirection(trans->getUp());
-		bullet->setSpeed(.1f);
+		if(gunCount > 1)
+		{
+			auto obj = m_bulletPool.getNewObject();
+			auto bullet = obj->getComponent<Bullet>() ? obj->getComponent<Bullet>() : obj->addComponent<Bullet>();
+			auto tmpTrans = obj->getComponent<Transformer>();
+			tmpTrans->translate(trans->getLocalPosition() + trans->getUp() * 35);
+			bullet->setDirection(trans->getUp());
+			bullet->setSpeed(50);
+			gunCount = 0;
+		}
 	}
+	else
+	{
+		gunCount = 1.1f;
+	}
+
+	gunCount+=dt*.1f;
 
 	///bullet update
 	for(auto bullet : m_bulletPool.getObjectList())

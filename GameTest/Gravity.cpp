@@ -48,7 +48,7 @@ void Gravity::update(float dt)
 				trans2->getWorldTranslationMatrix() * trans2->getLocalPosition();
 			force[3] = 0;
 
-			float dist = force.lengthSquare();
+			float dist = force.lengthSquare()/10;
 			force.normalize();
 			force *= gravity->m_gravPull;
 			myPhysics->addForce(Vec3(force.x, force.y, force.z) / dist * dt);
